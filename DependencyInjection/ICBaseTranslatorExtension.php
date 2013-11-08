@@ -47,6 +47,8 @@ class ICBaseTranslatorExtension extends Extension
 
         $translator->addMethodCall('setFallbackLocale', array($config['translator']['fallback']));
 
+        // @codeCoverageIgnoreStart
+
         // Discover translation directories
         $directoryList = array();
         $classList     = array(
@@ -105,5 +107,7 @@ class ICBaseTranslatorExtension extends Extension
 
             $translator->addMethodCall('addResource', array($format, (string) $file, $locale, $domain));
         }
+
+        // @codeCoverageIgnoreEnd
     }
 }
