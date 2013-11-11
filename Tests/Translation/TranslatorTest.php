@@ -138,16 +138,34 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      */
     public function transMessageFormatterProvider()
     {
-        $date = new \DateTime('1998-03-23 16:34:20');
+        // To make this test time-insensitive.
+        $dateInTorontoTimezone = new \DateTime('1998-03-23 16:34:20 -0500');
+        $dateInUTCTimezone     = new \DateTime('1998-03-23 16:34:20 +0000');
 
         return array(
             array('mock test one', 'mock test one', array(), 5.3),
             array('%name% {is cute.', 'panda {is cute.', array('%name%' => 'panda'), 5.3),
             array('{0, select, male {His name} other {Her name}}', 'His name', array('male'), 5.3),
-            array('{0, select, male {His name} female {Her name} other {Their names}}', 'Their names', array('mock value'), 5.3),
-            array('Peter has {0,choice,0#{0,number} cat|1#{0,number} cat|1<{0,number} cats} and {1,choice,0#{1,number} dog| 1#{1,number} dog| 1<{1,number} dogs}', 'Peter has 0 cat and 2 dogs', array(0, 2), 5.5),
-            array('Hello %name%', 'Hello Fabien', array('%name%'=>'Fabien'), 5.3),
-            array('{gender_of_host, select,
+            array(
+                '{0, select, male {His name} female {Her name} other {Their names}}',
+                'Their names',
+                array('mock value'),
+                5.3
+            ),
+            array(
+                'Peter has {0,choice,0#{0,number} cat|1#{0,number} cat|1<{0,number} cats} and {1,choice,0#{1,number} dog| 1#{1,number} dog| 1<{1,number} dogs}',
+                'Peter has 0 cat and 2 dogs',
+                array(0, 2),
+                5.5
+            ),
+            array(
+                'Hello %name%',
+                'Hello Fabien',
+                array('%name%'=>'Fabien'),
+                5.3
+            ),
+            array(
+                '{gender_of_host, select,
                       female {{num_guests, plural, offset:1
                           =0 {{host} does not give a party.}
                           =1 {{host} invites {guest} to her party.}
@@ -164,11 +182,33 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
                           =2 {{host} invites {guest} and one other person to their party.}
                           other {{host} invites {guest} and # other people to their party.}}}}',
                 'Foo invites Bar and one other person to his party.',
-                array('gender_of_host' => 'male', 'num_guests' => 2, 'host' => 'Foo', 'guest' => 'Bar'), 5.5),
-            array('My name is {0}, born in %year%', 'My name is Juti, born in 1990', array('Juti', '%year%' => '1990'), 5.3),
-            array('My name is {name}, born in %year%', 'My name is Juti, born in %year%', array('name' => 'Juti', '%year%' => '1980'), 5.5),
-            array('At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.', 'At 16:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
-        array(7, $date->getTimestamp() , 'a disturbance in the Force'), 5.3)
+                array('gender_of_host' => 'male', 'num_guests' => 2, 'host' => 'Foo', 'guest' => 'Bar'),
+                5.5
+            ),
+            array(
+                'My name is {0}, born in %year%',
+                'My name is Juti, born in 1990',
+                array('Juti', '%year%' => '1990'),
+                5.3
+            ),
+            array(
+                'My name is {name}, born in %year%',
+                'My name is Juti, born in %year%',
+                array('name' => 'Juti', '%year%' => '1980'),
+                5.5
+            ),
+            array(
+                'At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.',
+                'At 16:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
+                array(7, $dateInTorontoTimezone->getTimestamp() , 'a disturbance in the Force'),
+                5.3
+            ),
+            array(
+                'At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.',
+                'At 11:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
+                array(7, $dateInUTCTimezone->getTimestamp(), 'a disturbance in the Force'),
+                5.3
+            ),
         );
     }
 
