@@ -6,7 +6,9 @@
 namespace IC\Bundle\Base\TranslatorBundle\Tests\DependencyInjection;
 
 use IC\Bundle\Base\TranslatorBundle\DependencyInjection\ICBaseTranslatorExtension;
-use IC\Bundle\Base\TestBundle\Test\DependencyInjection\ExtensionTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Test for IC Base Translator Bundle
@@ -16,25 +18,137 @@ use IC\Bundle\Base\TestBundle\Test\DependencyInjection\ExtensionTestCase;
  *
  * @author Enzo Rizzo <enzor@nationalfibre.net>
  */
-class ICBaseTranslatorExtensionTest extends ExtensionTestCase
+class ICBaseTranslatorExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test valid data
-     *
+     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
-    public function testValidConfiguration()
+    protected $container;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
     {
-        $this->markTestIncomplete("Incomplete due to complexity");
+        parent::setUp();
+
+        $this->container = new ContainerBuilder();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown()
+    {
+        unset($this->container);
+
+        parent::tearDown();
+    }
+
+    /**
+     * Test valid configuration
+     *
+     * @param array $config
+     *
+     * @dataProvider provideValidData
+     */
+    public function testValidConfiguration($config)
+    {
+        $this->container->setParameter('kernel.root_dir', 'mock_root_dir');
+        $this->container->setParameter('kernel.bundles', array());
 
         $loader = new ICBaseTranslatorExtension();
-        $config =
-            array(
-                'translator' => array(
-                    'fallback' => 'translator',
-                ),
-        );
 
         $this->load($loader, $config);
-        //$this->assertParameter('en', 'ic_base_translator.service.translator');
+
+        $translator = $this->container->getDefinition('ic_base_translator.service.translator');
+
+        $this->assertHasDefinition('ic_base_translator.service.translator');
+        $this->assertDICDefinitionMethodCallAt(0, $translator, 'setFallbackLocale', array('en'));
+    }
+
+    /**
+     * Provide configuration data
+     *
+     * @return array
+     */
+    public function provideValidData()
+    {
+        return array(
+            array(
+                array(
+                    'translator' => array(
+                        'fallback' => 'en',
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Retrieve the container
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Loads the configuration into a provided Extension.
+     *
+     * @param \Symfony\Component\HttpKernel\DependencyInjection\Extension $extension
+     * @param array                                                       $configuration
+     */
+    protected function load(Extension $extension, array $configuration)
+    {
+        $extension->load(array($configuration), $this->container);
+    }
+
+    /**
+     * Assertion on the Definition existance of a Container Builder.
+     *
+     * @param string $id
+     */
+    protected function assertHasDefinition($id)
+    {
+        $actual = $this->container->hasDefinition($id) ?: $this->containerBuilder->hasAlias($id);
+
+        $this->assertTrue($actual);
+    }
+
+    /**
+     * Assertion on the called Method position of a DIC Service Definition.
+     *
+     * @param integer                                           $position
+     * @param \Symfony\Component\DependencyInjection\Definition $definition
+     * @param string                                            $methodName
+     * @param array                                             $params
+     */
+    protected function assertDICDefinitionMethodCallAt($position, Definition $definition, $methodName, array $params = null)
+    {
+        $calls = $definition->getMethodCalls();
+
+        if ( ! isset($calls[$position][0])) {
+            // Throws an Exception
+            $this->fail(
+                sprintf('Method "%s" is expected to be called at position %s.', $methodName, $position)
+            );
+        }
+
+        $this->assertEquals(
+            $methodName,
+            $calls[$position][0],
+            sprintf('Method "%s" is expected to be called at position %s.', $methodName, $position)
+        );
+
+        if ($params !== null) {
+            $this->assertEquals(
+                $params,
+                $calls[$position][1],
+                sprintf('Expected parameters to methods "%s" do not match the actual parameters.', $methodName)
+            );
+        }
     }
 }
