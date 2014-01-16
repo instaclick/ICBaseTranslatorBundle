@@ -118,8 +118,6 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransMessageFormatter($valueToConvert, $expected, $parameters, $phpVersion)
     {
-        date_default_timezone_set('UTC');
-
         $currentVersion = (float) substr(PHP_VERSION, 0, 3);
 
         if ($currentVersion < $phpVersion) {
@@ -201,13 +199,13 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 'At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.',
-                'At 21:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
+                'At 16:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
                 array(7, $dateInTorontoTimezone->getTimestamp() , 'a disturbance in the Force'),
                 5.3
             ),
             array(
                 'At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.',
-                'At 16:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
+                'At 11:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
                 array(7, $dateInUTCTimezone->getTimestamp(), 'a disturbance in the Force'),
                 5.3
             ),
