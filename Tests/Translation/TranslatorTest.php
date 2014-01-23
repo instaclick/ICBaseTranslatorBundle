@@ -30,6 +30,11 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        // Because MessageFormatter do not respect date.timezone defined in INI setting
+        // https://bugs.php.net/bug.php?id=58756
+        putenv('TZ=' . 'America/Toronto');
+        date_default_timezone_set('America/Toronto');
+
         $this->tmpDir = sys_get_temp_dir().'/sf2_translation';
         $this->deleteTmpDir();
     }
