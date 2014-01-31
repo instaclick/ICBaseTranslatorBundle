@@ -126,7 +126,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $currentVersion = (float) substr(PHP_VERSION, 0, 3);
 
         if ($currentVersion < $phpVersion) {
-            $this->markTestSkipped('Required PHP >= ' . $phpVersion);
+            $this->markTestSkipped('Requires PHP >= ' . $phpVersion);
         }
 
         $translator = $this->getTranslator($this->getLoader());
