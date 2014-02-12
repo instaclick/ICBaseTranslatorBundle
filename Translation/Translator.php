@@ -129,11 +129,6 @@ class Translator extends FrameworkTranslator
             throw new \RuntimeException('Unable to translate the message (CODE:' . $messageFormatter->getErrorCode() . '.');
         }
 
-        // @internal - Temporary fallback will be removed once expose bazinga translator is fixed
-        if (preg_match('/\%[a-zA-Z0-9_-]+\%/', $message) === 1) {
-            $message = strtr($message, $parameters);
-        }
-
         return $message;
     }
 

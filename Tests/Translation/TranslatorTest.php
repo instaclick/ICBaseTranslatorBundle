@@ -117,18 +117,11 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      * @param string $valueToConvert
      * @param string $expected
      * @param array  $parameters
-     * @param float  $phpVersion
      *
      * @dataProvider transMessageFormatterProvider
      */
-    public function testTransMessageFormatter($valueToConvert, $expected, $parameters, $phpVersion)
+    public function testTransMessageFormatter($valueToConvert, $expected, $parameters)
     {
-        $currentVersion = (float) substr(PHP_VERSION, 0, 3);
-
-        if ($currentVersion < $phpVersion) {
-            $this->markTestSkipped('Requires PHP >= ' . $phpVersion);
-        }
-
         $translator = $this->getTranslator($this->getLoader());
         $translator->setLocale('fr');
         $translator->setFallbackLocale(array('en', 'es', 'pt-PT', 'pt_BR'));
@@ -148,26 +141,23 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $dateInUTCTimezone     = new \DateTime('1998-03-23 16:34:20 +0000');
 
         return array(
-            array('mock test one', 'mock test one', array(), 5.3),
-            array('%name% {is cute.', 'panda {is cute.', array('%name%' => 'panda'), 5.3),
-            array('{0, select, male {His name} other {Her name}}', 'His name', array('male'), 5.3),
+            array('mock test one', 'mock test one', array()),
+            array('%name% {is cute.', 'panda {is cute.', array('%name%' => 'panda')),
+            array('{0, select, male {His name} other {Her name}}', 'His name', array('male')),
             array(
                 '{0, select, male {His name} female {Her name} other {Their names}}',
                 'Their names',
                 array('mock value'),
-                5.3
             ),
             array(
                 'Peter has {0,choice,0#{0,number} cat|1#{0,number} cat|1<{0,number} cats} and {1,choice,0#{1,number} dog| 1#{1,number} dog| 1<{1,number} dogs}',
                 'Peter has 0 cat and 2 dogs',
                 array(0, 2),
-                5.5
             ),
             array(
-                'Hello %name%',
+                'Hello {name}',
                 'Hello Fabien',
-                array('%name%'=>'Fabien'),
-                5.3
+                array('name'=>'Fabien'),
             ),
             array(
                 '{gender_of_host, select,
@@ -188,31 +178,26 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
                           other {{host} invites {guest} and # other people to their party.}}}}',
                 'Foo invites Bar and one other person to his party.',
                 array('gender_of_host' => 'male', 'num_guests' => 2, 'host' => 'Foo', 'guest' => 'Bar'),
-                5.5
             ),
             array(
-                'My name is {0}, born in %year%',
+                'My name is {0}, born in {year}',
                 'My name is Juti, born in 1990',
-                array('Juti', '%year%' => '1990'),
-                5.3
+                array('Juti', 'year' => '1990'),
             ),
             array(
                 'My name is {name}, born in %year%',
                 'My name is Juti, born in %year%',
                 array('name' => 'Juti', '%year%' => '1980'),
-                5.5
             ),
             array(
                 'At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.',
                 'At 16:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
                 array(7, $dateInTorontoTimezone->getTimestamp() , 'a disturbance in the Force'),
-                5.3
             ),
             array(
                 'At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.',
                 'At 11:34:20 on 23/03/1998, there was a disturbance in the Force on planet 7.',
                 array(7, $dateInUTCTimezone->getTimestamp(), 'a disturbance in the Force'),
-                5.3
             ),
         );
     }

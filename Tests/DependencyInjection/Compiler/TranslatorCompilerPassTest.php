@@ -113,8 +113,8 @@ class TranslatorCompilerPassTest extends \PHPUnit_Framework_TestCase
             ->will($this->onConsecutiveCalls(true, true));
 
         $attributes = array (
-                'id'  => array('alias'),
-                'id2' => array('legacy-alias')
+                'id'  => array(0 => array('alias' => true)),
+                'id2' => array(0 => array('alias' => false, 'legacy-alias' => true))
         );
 
         $container
