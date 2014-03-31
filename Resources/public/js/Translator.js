@@ -8,6 +8,8 @@ define(
     function ($, Translator) {
         'use strict';
 
+        var ndeLocale = null;
+
         $.extend(Translator, {
             getTranslationFromUrl: function (url) {
                 $.ajax({
@@ -20,10 +22,10 @@ define(
                 });
             },
             setLocale: function (locale) {
-                this.ndeLocale = locale;
+                ndeLocale = locale;
             },
             loadByRoute: function (route) {
-                this.getTranslationFromUrl('/i18n/' + route + '/' + this.ndeLocale + '.json');
+                this.getTranslationFromUrl('/translations/' + route + '.json?locales=' + ndeLocale);
             }
         });
 
