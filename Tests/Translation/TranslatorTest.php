@@ -347,7 +347,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      * @param string $locale
      * @param array  $messages
      *
-     * @return MessageCatalogue
+     * @return \Symfony\Component\Translation\MessageCatalogue
      */
     protected function getCatalogue($locale, $messages)
     {
@@ -433,7 +433,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      * @param \PHPUnit_Framework_MockObject_MockObject $loader
      * @param array                                    $options
      *
-     * @return Translator
+     * @return \IC\Bundle\Base\TranslatorBundle\Translation\Translator
      */
     public function getTranslator($loader, $options = array())
     {

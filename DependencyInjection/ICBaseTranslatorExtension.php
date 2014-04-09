@@ -35,8 +35,8 @@ class ICBaseTranslatorExtension extends Extension
     /**
      * Loads the translator configuration.
      *
-     * @param array            $config    A translator configuration array
-     * @param ContainerBuilder $container A ContainerBuilder instance
+     * @param array                                                   $config    A translator configuration array
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container A ContainerBuilder instance
      *
      * @return null
      */

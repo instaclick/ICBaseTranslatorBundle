@@ -30,10 +30,10 @@ class Translator extends FrameworkTranslator
      *   * cache_dir: The cache directory (or null to disable caching)
      *   * debug:     Whether to enable debugging or not (false by default)
      *
-     * @param ContainerInterface $container A ContainerInterface instance
-     * @param MessageSelector    $selector  The message selector for pluralization
-     * @param array              $loaderIds An array of loader Ids
-     * @param array              $options   An array of options
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container A ContainerInterface instance
+     * @param \Symfony\Component\Translation\MessageSelector            $selector  The message selector for pluralization
+     * @param array                                                     $loaderIds An array of loader Ids
+     * @param array                                                     $options   An array of options
      *
      * @throws \InvalidArgumentException
      */
